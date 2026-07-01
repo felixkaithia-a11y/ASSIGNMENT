@@ -1,0 +1,169 @@
+# ==========================================
+# AI SMART LIGHTING CONTROL SYSTEM
+# ==========================================
+
+password = "1234"
+attempts = 3
+
+while attempts > 0:
+    user = input("Enter Password: ")
+
+    if user == password:
+        print("\nAccess Granted!")
+        break
+
+    attempts -= 1
+    print("Incorrect Password.")
+
+if attempts == 0:
+    print("System Locked!")
+    exit()
+
+# System Variables
+battery = 100
+bulb_health = 100
+lights_used = 0
+total_brightness = 0
+
+print("\nSystem Initialized...")
+
+while True:
+
+    print("\n===================================")
+    print(" SMART LIGHTING DASHBOARD")
+    print("===================================")
+    print(f"Battery Level : {battery}%")
+    print(f"Bulb Health   : {bulb_health}%")
+
+    # Motion Detection
+    motion = input("\nMotion Detected? (yes/no): ").lower()
+
+    # Ambient Light
+    ambient = int(input("Ambient Light Level (0-100): "))
+
+    # Current Time
+    hour = int(input("Current Hour (0-23): "))
+
+    # AI Brightness
+    if ambient < 30:
+        brightness = 90
+        print("Environment: Dark")
+    elif ambient < 70:
+        brightness = 60
+        print("Environment: Moderate")
+    else:
+        brightness = 30
+        print("Environment: Bright")
+
+    # Night Mode
+    if hour >= 18 or hour <= 5:
+        brightness += 10
+        if brightness > 100:
+            brightness = 100
+        print("Night Mode Activated")
+
+    # Mood Lighting
+    print("\nMood Lighting")
+    print("1. Reading")
+    print("2. Study")
+    print("3. Relax")
+    print("4. Movie")
+    print("5. Party")
+
+    mood = input("Choose Mode: ")
+
+    if mood == "1":
+        brightness = 95
+    elif mood == "2":
+        brightness = 90
+    elif mood == "3":
+        brightness = 50
+    elif mood == "4":
+        brightness = 25
+    elif mood == "5":
+        brightness = 70
+
+    # Manual Override
+    print(f"\nAI Recommended Brightness: {brightness}%")
+
+    override = input("Override Brightness? (yes/no): ").lower()
+
+    if override == "yes":
+        brightness = int(input("Enter Brightness (0-100): "))
+
+        if brightness < 0:
+            brightness = 0
+        elif brightness > 100:
+            brightness = 100
+
+        print("Manual Override Enabled")
+
+    # Energy Saving
+    if battery < 30:
+        brightness = brightness // 2
+        print("Energy Saving Mode Activated")
+
+    # Occupancy Timer
+    if motion == "yes":
+        lights = True
+    else:
+        print("No Motion...")
+        print("Waiting before switching OFF...")
+        lights = False
+
+    # Light Control
+    if lights:
+        print("\nLights: ON")
+        print(f"Brightness: {brightness}%")
+
+        battery -= 5
+        bulb_health -= 1
+
+        lights_used += 1
+        total_brightness += brightness
+
+    else:
+        print("\nLights: OFF")
+        battery -= 1
+
+    # Battery Protection
+    if battery < 0:
+        battery = 0
+
+    # Emergency Mode
+    if battery <= 10:
+        print("\n*** EMERGENCY BATTERY MODE ***")
+
+    # Bulb Warning
+    if bulb_health <= 20:
+        print("Bulb Health Low - Replacement Recommended")
+
+    # Continue
+    again = input("\nRun Again? (yes/no): ").lower()
+
+    if again != "yes":
+        break
+
+# Final Report
+print("\n===================================")
+print(" DAILY LIGHTING REPORT")
+print("===================================")
+
+average = 0
+
+if lights_used > 0:
+    average = total_brightness / lights_used
+
+print(f"Battery Remaining : {battery}%")
+print(f"Bulb Health       : {bulb_health}%")
+print(f"Lights Used       : {lights_used}")
+print(f"Average Brightness: {average:.1f}%")
+
+if battery > 60:
+    print("Efficiency Rating : Excellent")
+elif battery > 30:
+    print("Efficiency Rating : Good")
+else:
+    print("Efficiency Rating : Needs Improvement")
+
+print("\nSystem Shutdown...")
